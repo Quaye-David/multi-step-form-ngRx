@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<main class="multi-step">
+  <button
+  class="multi-step__close-button"
+  (click)="handleClose()"
+  aria-label="Close form"
+>
+  ✕
+</button>
+  <app-step-sidebar
+    [steps]="steps"
+    [currentStep]="currentStep"
+    [isMobile]="isMobile"
+  />
+
+  <div class="multi-step__content">
+    <div class="multi-step__form-container">
+      <router-outlet/>
+    </div>
+  </div>
+</main>

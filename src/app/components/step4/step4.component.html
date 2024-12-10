@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<div class="summary">
+  <span class="summary__title">Finishing up</span>
+  <p class="summary__description">Double-check everything looks OK before confirming.</p>
+
+  <div class="summary__content">
+    <div class="summary__plan">
+      <div class="summary__plan-info">
+        <div class="summary__plan-title">
+          {{ selectedPlan.name }} ({{ selectedPlan.isYearly ? 'Yearly' : 'Monthly' }})
+        </div>
+        <a routerLink="../step2" class="summary__change-link">Change</a>
+      </div>
+      <span class="summary__plan-price">
+        ${{ selectedPlan.price }}/{{ selectedPlan.isYearly ? 'yr' : 'mo' }}
+      </span>
+    </div>
+    <hr class="summary__divider">
+    @if (selectedAddons.length > 0) {
+      <div class="summary__addons">
+        @for (addon of selectedAddons; track addon.name) {
+          <div class="summary__addon-item">
+            <span class="summary__addon-name">{{ addon.name }}</span>
+            <span class="summary__addon-price">
+              +${{ addon.price }}/{{ selectedPlan.isYearly ? 'yr' : 'mo' }}
+            </span>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+    <div class="summary__total">
+      <span class="summary__total-label">
+        Total (per {{ selectedPlan.isYearly ? 'year' : 'month' }})
+      </span>
+           <span class="summary__total-price">
+        {{ totalPrice | currency:'USD':'symbol-narrow' }}/{{ selectedPlan.isYearly ? 'yr' : 'mo' }}
+      </span>
+  </div>
+
+  <app-navigation-buttons
+    [showBackButton]="true"
+    [showConfirmButton]="true"
+    (onBack)="goBack()"
+    (onConfirm)="confirmSubscription()"
+  />
+</div>

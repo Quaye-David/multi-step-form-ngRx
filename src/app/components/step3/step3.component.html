@@ -1,0 +1,45 @@
+<div class="add-ons">
+  <div class="add-ons__header">
+    <span class="add-ons__title">Pick add-ons</span>
+    <p class="add-ons__description">Add-ons help enhance your gaming experience.</p>
+  </div>
+
+  <div class="add-ons__list">
+    @for (addon of addons; track addon.id) {
+      <div
+        class="addon-item"
+        [class.addon-item--selected]="addon.selected"
+        (click)="toggleAddon(addon)"
+        (keydown.enter)="toggleAddon(addon)"
+        tabindex="0"
+      >
+        <div class="addon-item__details">
+          <div class="addon-item__checkbox">
+            <input
+              type="checkbox"
+              [id]="addon.id"
+              [checked]="addon.selected"
+              class="addon-item__input"
+            >
+            <span class="addon-item__checkmark"></span>
+          </div>
+
+          <div class="addon-item__content">
+            <h3 class="addon-item__title">{{ addon.name }}</h3>
+            <p class="addon-item__description">{{ addon.description }}</p>
+          </div>
+        </div>
+
+        <div class="addon-item__price">
+          @if (isYearly) {
+            <span>+${{ addon.yearlyPrice }}/yr</span>
+          } @else {
+            <span>+${{ addon.monthlyPrice }}/mo</span>
+          }
+        </div>
+      </div>
+    }
+  </div>
+  <app-navigation-buttons [showBackButton]="true" [showNextButton]="true" [isNextDisabled]="!selectedAddons.length"
+    (onBack)="goBack()" (onNext)="goNext()" />
+</div>

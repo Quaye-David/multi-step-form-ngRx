@@ -1,0 +1,39 @@
+<!-- step2.component.html -->
+<div class="plan-selection">
+  <span class="plan-selection__title">Select your plan</span>
+  <p class="plan-selection__description">You have the option of monthly or yearly billing.</p>
+
+  <div class="plan-selection__cards">
+    @for (plan of plans; track plan.id) {
+    <div class="plan-card" [class.plan-card--active]="selectedPlan === plan.id" (click)="selectPlan(plan.id)"
+      (keypress)="selectPlan(plan.id)">
+      <div class="plan-card__icon">
+        <img [src]="plan.icon" [alt]="plan.title + ' plan icon'">
+      </div>
+      <div class="plan-card__content">
+        <h3 class="plan-card__title">{{ plan.title }}</h3>
+        <p class="plan-card__price">
+          @if (isYearly) {
+          <span>${{ plan.yearlyPrice }}/yr</span>
+          <span class="plan-card__bonus">2 months free</span>
+          } @else {
+          <span>${{ plan.monthlyPrice }}/mo</span>
+          }
+        </p>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="billing-toggle">
+    <span class="billing-toggle__option" [class.billing-toggle__option--active]="!isYearly">Monthly</span>
+    <label class="billing-toggle__switch">
+      <input type="checkbox" [checked]="isYearly" (change)="toggleBilling()" class="billing-toggle__input">
+      <span class="billing-toggle__slider"></span>
+    </label>
+    <span class="billing-toggle__option" [class.billing-toggle__option--active]="isYearly">Yearly</span>
+  </div>
+
+  <app-navigation-buttons [showBackButton]="true" [showNextButton]="true" [isNextDisabled]="!selectedPlan"
+    (onBack)="goBack()" (onNext)="goNext()" />
+</div>
