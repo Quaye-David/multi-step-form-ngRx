@@ -60,14 +60,16 @@ export class Step1Component implements OnInit, OnDestroy {
     );
   }
 
-  private setupFormValidation(): void {
+    private setupFormValidation(): void {
     this.subscription.add(
       this.personalForm.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged()
       ).subscribe(() => {
         if (!this.isLoadingData && this.personalForm.valid) {
-          this.store.dispatch(FormActions.updatePersonalInfo({ personalInfo: this.personalForm.value }));
+          this.store.dispatch(FormActions.updatePersonalInfo({
+            personalInfo: this.personalForm.value
+          }));
         }
       })
     );
@@ -76,14 +78,15 @@ export class Step1Component implements OnInit, OnDestroy {
   async goNext(): Promise<void> {
     this.formSubmitted = true;
 
-    // Mark all fields as touched
     Object.keys(this.personalForm.controls).forEach(key => {
       const control = this.personalForm.get(key);
       control?.markAsTouched();
     });
 
     if (this.personalForm.valid) {
-      this.store.dispatch(FormActions.validateForm());
+      this.store.dispatch(FormActions.updatePersonalInfo({
+        personalInfo: this.personalForm.value
+      }));
       await this.router.navigate(['/multi-step/step2']);
     }
   }

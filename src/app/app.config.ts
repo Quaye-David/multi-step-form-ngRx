@@ -4,15 +4,15 @@ import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 import { routes } from './app.routes';
-import { reducers } from './store';
+import { reducers, metaReducers } from './store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideStore(reducers),
+    provideStore(reducers, { metaReducers }),
     provideStoreDevtools({
       maxAge: 25,
-      connectInZone: true
-    })
-  ]
+      connectInZone: true,
+    }),
+  ],
 };

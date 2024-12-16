@@ -19,6 +19,9 @@ export const FormActions = createActionGroup({
     'Update Plan': props<{ plan: FormData['plan'] }>(),
     'Update Addons': props<{ addons: FormData['addons'] }>(),
 
+    // Set entire form data
+    'Set Form Data': props<{ formData: FormData }>(),
+
     // Form completion/reset
     'Complete Form': emptyProps(),
     'Reset Form': emptyProps(),
