@@ -1,10 +1,12 @@
-// step1.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { FormDataService } from '../../services/form-data.service';
+import { Store } from '@ngrx/store';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 import { NavigationButtonsComponent } from '../navigation-buttons/navigation-buttons.component';
 import { Router } from '@angular/router';
+import { AppState } from '../../store';
+import { FormActions } from '../../store/form/form.actions';
+import { selectFormData } from '../../store/form/form.selectors';
 
 @Component({
   selector: 'app-step1',
@@ -21,7 +23,7 @@ export class Step1Component implements OnInit, OnDestroy {
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly formDataService: FormDataService,
+    private readonly store: Store<AppState>,
     private readonly router: Router
   ) {}
 
@@ -49,7 +51,7 @@ export class Step1Component implements OnInit, OnDestroy {
   private loadSavedData(): void {
     this.isLoadingData = true;
     this.subscription.add(
-      this.formDataService.formData$.subscribe(data => {
+      this.store.select(selectFormData).subscribe(data => {
         if (data?.personalInfo) {
           this.personalForm.patchValue(data.personalInfo, { emitEvent: false });
         }
@@ -65,7 +67,7 @@ export class Step1Component implements OnInit, OnDestroy {
         distinctUntilChanged()
       ).subscribe(() => {
         if (!this.isLoadingData && this.personalForm.valid) {
-          this.formDataService.updatePersonalInfo(this.personalForm.value);
+          this.store.dispatch(FormActions.updatePersonalInfo({ personalInfo: this.personalForm.value }));
         }
       })
     );
@@ -81,6 +83,7 @@ export class Step1Component implements OnInit, OnDestroy {
     });
 
     if (this.personalForm.valid) {
+      this.store.dispatch(FormActions.validateForm());
       await this.router.navigate(['/multi-step/step2']);
     }
   }

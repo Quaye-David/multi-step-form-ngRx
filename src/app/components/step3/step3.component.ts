@@ -1,11 +1,13 @@
-// step3.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { NavigationButtonsComponent } from '../navigation-buttons/navigation-buttons.component';
-import { FormDataService } from '../../services/form-data.service';
+import { AppState } from '../../store';
+import { FormActions } from '../../store/form/form.actions';
+import { selectAddons, selectPlan } from '../../store/form/form.selectors';
 
 interface Addon {
   id: string;
@@ -21,14 +23,11 @@ interface Addon {
   standalone: true,
   imports: [CommonModule, FormsModule, NavigationButtonsComponent],
   templateUrl: './step3.component.html',
-  styleUrl: './step3.component.css'
+  styleUrls: ['./step3.component.css']
 })
 export class Step3Component implements OnInit, OnDestroy {
   isYearly = false;
   private readonly subscription = new Subscription();
-  private readonly router: Router;
-  private readonly formDataService: FormDataService;
-
   addons: Addon[] = [
     {
       id: 'online',
@@ -57,24 +56,23 @@ export class Step3Component implements OnInit, OnDestroy {
   ];
 
   constructor(
-    router: Router,
-    formDataService: FormDataService
-  ) {
-    this.router = router;
-    this.formDataService = formDataService;
-  }
+    private readonly store: Store<AppState>,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     this.subscription.add(
-      this.formDataService.formData$.subscribe(data => {
-        // Load billing period from plan
-        this.isYearly = data.plan.isYearly;
+      this.store.select(selectPlan).subscribe(plan => {
+        this.isYearly = plan.isYearly;
+      })
+    );
 
-        // Load previously selected addons
-        if (data.addons.length) {
+    this.subscription.add(
+      this.store.select(selectAddons).subscribe(savedAddons => {
+        if (savedAddons.length) {
           this.addons = this.addons.map(addon => ({
             ...addon,
-            selected: data.addons.some(saved => saved.id === addon.id)
+            selected: savedAddons.some(saved => saved.id === addon.id)
           }));
         }
       })
@@ -102,11 +100,7 @@ export class Step3Component implements OnInit, OnDestroy {
       selected: addon.selected
     }));
 
-    try {
-      this.formDataService.updateAddons(selectedAddons);
-    } catch (error) {
-      console.error('Failed to update addons:', error);
-    }
+    this.store.dispatch(FormActions.updateAddons({ addons: selectedAddons }));
   }
 
   goBack(): void {

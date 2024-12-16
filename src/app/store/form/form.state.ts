@@ -1,5 +1,27 @@
-// State interface for the form feature
-import { FormData } from '../../models/form-data.interface';
+export interface PersonalInfo {
+  name: string;
+  email: string;
+  phone: string;
+}
+
+export interface Plan {
+  type: string;
+  isYearly: boolean;
+  price: number;
+}
+
+export interface Addon {
+  id: string;
+  name: string;
+  price: number;
+  selected: boolean;
+}
+
+export interface FormData {
+  personalInfo: PersonalInfo;
+  plan: Plan;
+  addons: Addon[];
+}
 
 export interface FormState {
   formData: FormData;
@@ -7,13 +29,12 @@ export interface FormState {
   error: string | null;
 }
 
-// Initial state
 export const initialFormState: FormState = {
   formData: {
     personalInfo: { name: '', email: '', phone: '' },
     plan: { type: '', isYearly: false, price: 0 },
-    addons: []
+    addons: [],
   },
   loading: false,
-  error: null
+  error: null,
 };

@@ -9,18 +9,18 @@ export const FormActions = createActionGroup({
     'Load Form Data Success': props<{ formData: FormData }>(),
     'Load Form Data Failure': props<{ error: string }>(),
 
-     // Form validation
-     'Validate Form': emptyProps(),
-     'Form Valid': emptyProps(),
-     'Form Invalid': props<{ errors: string[] }>(),
+    // Form validation
+    'Validate Form': emptyProps(),
+    'Form Valid': emptyProps(),
+    'Form Invalid': props<{ errors: string[] }>(),
 
     // Update form data
     'Update Personal Info': props<{ personalInfo: FormData['personalInfo'] }>(),
     'Update Plan': props<{ plan: FormData['plan'] }>(),
     'Update Addons': props<{ addons: FormData['addons'] }>(),
 
-   // Form completion/reset
-   'Complete Form': emptyProps(),
-   'Reset Form': emptyProps(),
+    // Form completion/reset
+    'Complete Form': emptyProps(),
+    'Reset Form': emptyProps(),
   }
 });

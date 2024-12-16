@@ -1,14 +1,17 @@
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { NavigationButtonsComponent } from "../navigation-buttons/navigation-buttons.component";
-import { FormDataService } from '../../services/form-data.service';
+import { AppState } from '../../store';
+import { FormActions } from '../../store/form/form.actions';
+import { selectPlan } from '../../store/form/form.selectors';
 
 type PlanType = '' | 'arcade' | 'advanced' | 'pro';
+
 interface Plan {
-  id: PlanType;  // Update from string to PlanType
+  id: PlanType;
   title: string;
   monthlyPrice: number;
   yearlyPrice: number;
@@ -20,13 +23,11 @@ interface Plan {
   standalone: true,
   imports: [CommonModule, NavigationButtonsComponent],
   templateUrl: './step2.component.html',
-  styleUrl: './step2.component.css'
+  styleUrls: ['./step2.component.css']
 })
 export class Step2Component implements OnInit, OnDestroy {
   selectedPlan: Plan['id'] = 'arcade'; // Default fallback
   isYearly = false;
-  private readonly router: Router;
-  private readonly formDataService: FormDataService;
   private readonly subscription = new Subscription();
 
   plans: Plan[] = [
@@ -54,27 +55,23 @@ export class Step2Component implements OnInit, OnDestroy {
   ] as const;
 
   constructor(
-    router: Router,
-    formDataService: FormDataService
-  ) {
-    this.router = router;
-    this.formDataService = formDataService;
-  }
+    private readonly store: Store<AppState>,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
-    // Load saved data
+    this.loadSavedPlan();
+  }
+
+  private loadSavedPlan(): void {
     this.subscription.add(
-      this.formDataService.formData$.subscribe(data => {
-        if (data.plan.type) {
-          this.selectedPlan = data.plan.type as Plan['id'];
-          this.isYearly = data.plan.isYearly;
+      this.store.select(selectPlan).subscribe(plan => {
+        if (plan.type) {
+          this.selectedPlan = plan.type as Plan['id'];
+          this.isYearly = plan.isYearly;
         }
       })
     );
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   private updatePlanData(): void {
@@ -84,15 +81,13 @@ export class Step2Component implements OnInit, OnDestroy {
       return;
     }
 
-    try {
-      this.formDataService.updatePlan({
+    this.store.dispatch(FormActions.updatePlan({
+      plan: {
         type: this.selectedPlan,
         isYearly: this.isYearly,
         price: this.isYearly ? selectedPlanDetails.yearlyPrice : selectedPlanDetails.monthlyPrice
-      });
-    } catch (error) {
-      console.error('Failed to update plan:', error);
-    }
+      }
+    }));
   }
 
   toggleBilling(): void {
@@ -114,5 +109,9 @@ export class Step2Component implements OnInit, OnDestroy {
       this.updatePlanData();
       this.router.navigate(['/multi-step/step3']);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
