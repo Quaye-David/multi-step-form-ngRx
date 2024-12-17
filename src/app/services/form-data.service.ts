@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../store';
 import { FormActions } from '../store/form/form.actions';
 import { selectFormData, selectPlan, selectAddons } from '../store/form/form.selectors';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { FormData } from '../models/form-data.interface';
 @Injectable({
   providedIn: 'root'
@@ -48,5 +48,14 @@ export class FormService {
     } catch (error) {
       console.error('Error clearing storage:', error);
     }
+  }
+
+    hasIncompleteForm(): Observable<boolean> {
+    return this.getFormData().pipe(
+      map(formData => {
+        return !!formData?.personalInfo?.name &&
+               !formData?.plan?.type; // Check if form is incomplete
+      })
+    );
   }
 }

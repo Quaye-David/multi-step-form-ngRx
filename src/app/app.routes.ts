@@ -7,9 +7,12 @@ import { Step3Component } from './components/step3/step3.component';
 import { Step4Component } from './components/step4/step4.component';
 import { Step5Component } from './components/step5/step5.component';
 import { MobileNavigationGuard } from './guard/mobile-navigation-guard.service';
+import { FormGuard } from './guard/form.guard';
 
 export const routes: Routes = [
-  { path: '', component: LandingPageComponent },
+  { path: '', component: LandingPageComponent,
+    canActivate: [FormGuard]
+   },
   {
     path: 'multi-step',
     component: MultiStepComponent,
