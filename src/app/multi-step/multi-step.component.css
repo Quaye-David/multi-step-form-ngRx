@@ -107,6 +107,12 @@
   text-transform: uppercase;
 }
 
+.multi-step__nav-link--disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Content Area */
 .multi-step__content {
   display: grid;
