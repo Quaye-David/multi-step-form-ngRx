@@ -1,7 +1,10 @@
 <!-- step2.component.html -->
 <div class="plan-selection">
-  <span class="plan-selection__title">Select your plan</span>
-  <p class="plan-selection__description">You have the option of monthly or yearly billing.</p>
+  <div class="plan-selection__container">
+    <div>
+      <span class="plan-selection__title">Select your plan</span>
+      <p class="plan-selection__description">You have the option of monthly or yearly billing.</p>
+    </div>
 
   <div class="plan-selection__cards">
     @for (plan of plans; track plan.id) {
@@ -33,7 +36,7 @@
     </label>
     <span class="billing-toggle__option" [class.billing-toggle__option--active]="isYearly">Yearly</span>
   </div>
-
+</div>
   <app-navigation-buttons [showBackButton]="true" [showNextButton]="true" [isNextDisabled]="!selectedPlan"
     (onBack)="goBack()" (onNext)="goNext()" />
 </div>
