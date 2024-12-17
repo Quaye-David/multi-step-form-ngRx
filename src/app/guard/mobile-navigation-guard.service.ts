@@ -19,8 +19,8 @@ export class MobileNavigationGuard implements CanActivate {
     const targetStep = parseInt(route.url[0].path.replace('step', ''), 10);
     const currentStep = this.getCurrentStep();
 
-    // Allow normal navigation through form buttons
-    if (targetStep === currentStep + 1) {
+    // Allow backward navigation and normal form flow
+    if (targetStep === currentStep - 1 || targetStep === currentStep + 1) {
       return true;
     }
 

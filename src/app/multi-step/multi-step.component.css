@@ -168,60 +168,111 @@
   .multi-step {
     width: 95%;
     max-width: 700px;
-    height: auto;
-    min-height: 500px;
-    grid-template-columns: 200px 1fr;
+    min-height: 600px;
+    grid-template-columns: 220px 1fr;
     gap: 40px;
-    padding: 12px;
-  }
-
-  .multi-step__close-button {
-    top: 12px;
-    right: 12px;
-    width: 30px;
-    height: 30px;
+    padding: 20px;
+    box-shadow: 0 25px 40px -20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
   }
 
   .multi-step__sidebar {
-    padding: 24px 20px;
-    height: 100%;
+    padding: 32px 24px;
+    border-radius: 12px;
+    background-size: 120%;
+    background-position: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .multi-step__sidebar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
   }
 
   .multi-step__nav-item {
-    margin-bottom: 24px;
-    gap: 12px;
+    margin-bottom: 28px;
+    gap: 14px;
+    opacity: 0.9;
+    transition: all 0.3s ease;
+  }
+
+  .multi-step__nav-item:hover {
+    opacity: 1;
+    transform: translateX(5px);
   }
 
   .multi-step__step-number {
-    width: 30px;
-    height: 30px;
-    font-size: 14px;
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+    border-width: 2px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .multi-step__step-label {
-    font-size: 12px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    opacity: 0.9;
   }
 
   .multi-step__step-title {
-    font-size: 14px;
+    font-size: 15px;
+    letter-spacing: 0.5px;
   }
 
   .multi-step__content {
-    padding-right: 12px;
+    padding: 10px 20px 10px 0;
   }
 
   .multi-step__form-container {
-    padding-top: 32px;
+    padding-top: 20px;
+    position: relative;
   }
 
   .multi-step__buttons {
     max-width: 100%;
-    padding: 16px 0;
+    padding: 20px 0;
+    position: relative;
   }
 
   .multi-step__button {
-    padding: 10px 20px;
-    font-size: 14px;
+    padding: 12px 24px;
+    font-size: 15px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+
+  .multi-step__button--next,
+  .multi-step__button--confirm {
+    background: var(--denim);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .multi-step__button--next:hover,
+  .multi-step__button--confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  .multi-step__close-button {
+    top: 20px;
+    right: 20px;
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+    background: var(--light-grey);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .multi-step__close-button:hover {
+    transform: rotate(90deg) scale(1.1);
   }
 }
 
