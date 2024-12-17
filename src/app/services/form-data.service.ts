@@ -1,99 +1,52 @@
-// form-data.service.ts
+// form.service.ts
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState } from '../store';
+import { FormActions } from '../store/form/form.actions';
+import { selectFormData, selectPlan, selectAddons } from '../store/form/form.selectors';
+import { Observable } from 'rxjs';
 import { FormData } from '../models/form-data.interface';
-
 @Injectable({
   providedIn: 'root'
 })
-export class FormDataService {
-  private formData: FormData = {
-    personalInfo: { name: '', email: '', phone: '' },
-    plan: { type: '', isYearly: false, price: 0 },
-    addons: []
-  };
+export class FormService {
+  constructor(private readonly store: Store<AppState>) {}
 
-  private formDataSubject = new BehaviorSubject<FormData>(this.formData);
-  private formValidSubject = new BehaviorSubject<boolean>(false);
-
-  formData$ = this.formDataSubject.asObservable();
-  isFormValid$ = this.formValidSubject.asObservable();
-
-  constructor() {
-    this.loadFromLocalStorage();
+  getFormData(): Observable<FormData> {
+    return this.store.select(selectFormData);
   }
 
-  updatePersonalInfo(info: FormData['personalInfo']) {
-    this.formData.personalInfo = info;
-    this.formDataSubject.next(this.formData);
-    this.validateForm();
-    this.saveToLocalStorage();
+  getPlan(): Observable<any> {
+    return this.store.select(selectPlan);
   }
 
-  updatePlan(plan: FormData['plan']) {
-    this.formData.plan = plan;
-    this.formDataSubject.next(this.formData);
-    this.validateForm();
-    this.saveToLocalStorage();
+  getAddons(): Observable<any> {
+    return this.store.select(selectAddons);
   }
 
-  updateAddons(addons: FormData['addons']) {
-    this.formData.addons = addons;
-    this.formDataSubject.next(this.formData);
-    this.validateForm();
-    this.saveToLocalStorage();
+  updatePersonalInfo(info: FormData['personalInfo']): void {
+    this.store.dispatch(FormActions.updatePersonalInfo({ personalInfo: info }));
   }
 
-  private loadFromLocalStorage(): void {
-    const savedData = localStorage.getItem('formData');
-    if (savedData) {
-      try {
-        this.formData = JSON.parse(savedData);
-        this.formDataSubject.next(this.formData);
-        this.validateForm();
-      } catch (error) {
-        console.error('Error loading form data:', error);
-      }
-    }
+  updatePlan(plan: FormData['plan']): void {
+    this.store.dispatch(FormActions.updatePlan({ plan }));
   }
 
-  private saveToLocalStorage(): void {
-    try {
-      localStorage.setItem('formData', JSON.stringify(this.formData));
-    } catch (error) {
-      console.error('Error saving form data:', error);
-    }
+  updateAddons(addons: FormData['addons']): void {
+    this.store.dispatch(FormActions.updateAddons({ addons }));
+  }
+
+  resetForm(): void {
+    this.store.dispatch(FormActions.resetForm());
   }
 
   clearStorage(): void {
     try {
+      this.resetForm();
+      // If you use localStorage or sessionStorage, clear relevant data
       localStorage.removeItem('formData');
-      this.formData = {
-        personalInfo: { name: '', email: '', phone: '' },
-        plan: { type: '', isYearly: false, price: 0 },
-        addons: []
-      };
-      this.formDataSubject.next(this.formData);
     } catch (error) {
       console.error('Error clearing storage:', error);
     }
-  }
-
-  private validateForm(): void {
-    const { name, email, phone } = this.formData.personalInfo;
-
-    // Validate personal info
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^\+?[\d\s-]+$/;
-
-    const isPersonalValid = Boolean(
-      name?.length >= 2 &&
-      RegExp(emailRegex).exec(email) &&
-      RegExp(phoneRegex).exec(phone)
-    );
-
-    const isPlanValid = Boolean(this.formData.plan.type);
-
-    this.formValidSubject.next(isPersonalValid && isPlanValid);
   }
 }

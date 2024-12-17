@@ -1,3 +1,5 @@
+import { FormData, PlanType } from '../../models/form-data.interface';
+
 export interface PersonalInfo {
   name: string;
   email: string;
@@ -5,7 +7,7 @@ export interface PersonalInfo {
 }
 
 export interface Plan {
-  type: string;
+  type: PlanType; // Changed from string to PlanType
   isYearly: boolean;
   price: number;
 }
@@ -15,12 +17,6 @@ export interface Addon {
   name: string;
   price: number;
   selected: boolean;
-}
-
-export interface FormData {
-  personalInfo: PersonalInfo;
-  plan: Plan;
-  addons: Addon[];
 }
 
 export interface FormState {

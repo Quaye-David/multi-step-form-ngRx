@@ -1,12 +1,10 @@
+// step2.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { NavigationButtonsComponent } from "../navigation-buttons/navigation-buttons.component";
-import { AppState } from '../../store';
-import { FormActions } from '../../store/form/form.actions';
-import { selectPlan } from '../../store/form/form.selectors';
+import { NavigationButtonsComponent } from '../navigation-buttons/navigation-buttons.component';
+import { FormService } from '../../services/form-data.service';
 
 type PlanType = '' | 'arcade' | 'advanced' | 'pro';
 
@@ -21,12 +19,12 @@ interface Plan {
 @Component({
   selector: 'app-step2',
   standalone: true,
-  imports: [CommonModule, NavigationButtonsComponent],
+  imports: [CommonModule, RouterLink, NavigationButtonsComponent],
   templateUrl: './step2.component.html',
   styleUrls: ['./step2.component.css']
 })
 export class Step2Component implements OnInit, OnDestroy {
-  selectedPlan: Plan['id'] = 'arcade'; // Default fallback
+  selectedPlan: Plan['id'] = 'arcade';
   isYearly = false;
   private readonly subscription = new Subscription();
 
@@ -52,10 +50,10 @@ export class Step2Component implements OnInit, OnDestroy {
       yearlyPrice: 150,
       icon: 'assets/images/icon-pro.svg'
     }
-  ] as const;
+  ];
 
   constructor(
-    private readonly store: Store<AppState>,
+    private readonly formService: FormService,
     private readonly router: Router
   ) {}
 
@@ -65,7 +63,7 @@ export class Step2Component implements OnInit, OnDestroy {
 
   private loadSavedPlan(): void {
     this.subscription.add(
-      this.store.select(selectPlan).subscribe(plan => {
+      this.formService.getPlan().subscribe(plan => {
         if (plan.type) {
           this.selectedPlan = plan.type as Plan['id'];
           this.isYearly = plan.isYearly;
@@ -81,13 +79,11 @@ export class Step2Component implements OnInit, OnDestroy {
       return;
     }
 
-    this.store.dispatch(FormActions.updatePlan({
-      plan: {
-        type: this.selectedPlan,
-        isYearly: this.isYearly,
-        price: this.isYearly ? selectedPlanDetails.yearlyPrice : selectedPlanDetails.monthlyPrice
-      }
-    }));
+    this.formService.updatePlan({
+      type: this.selectedPlan,
+      isYearly: this.isYearly,
+      price: this.isYearly ? selectedPlanDetails.yearlyPrice : selectedPlanDetails.monthlyPrice
+    });
   }
 
   toggleBilling(): void {

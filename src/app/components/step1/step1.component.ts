@@ -1,12 +1,10 @@
+// step1.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 import { NavigationButtonsComponent } from '../navigation-buttons/navigation-buttons.component';
 import { Router } from '@angular/router';
-import { AppState } from '../../store';
-import { FormActions } from '../../store/form/form.actions';
-import { selectFormData } from '../../store/form/form.selectors';
+import { FormService } from '../../services/form-data.service';
 
 @Component({
   selector: 'app-step1',
@@ -23,7 +21,7 @@ export class Step1Component implements OnInit, OnDestroy {
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly store: Store<AppState>,
+    private readonly formService: FormService,
     private readonly router: Router
   ) {}
 
@@ -51,7 +49,7 @@ export class Step1Component implements OnInit, OnDestroy {
   private loadSavedData(): void {
     this.isLoadingData = true;
     this.subscription.add(
-      this.store.select(selectFormData).subscribe(data => {
+      this.formService.getFormData().subscribe(data => {
         if (data?.personalInfo) {
           this.personalForm.patchValue(data.personalInfo, { emitEvent: false });
         }
@@ -60,16 +58,14 @@ export class Step1Component implements OnInit, OnDestroy {
     );
   }
 
-    private setupFormValidation(): void {
+  private setupFormValidation(): void {
     this.subscription.add(
       this.personalForm.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged()
       ).subscribe(() => {
         if (!this.isLoadingData && this.personalForm.valid) {
-          this.store.dispatch(FormActions.updatePersonalInfo({
-            personalInfo: this.personalForm.value
-          }));
+          this.formService.updatePersonalInfo(this.personalForm.value);
         }
       })
     );
@@ -84,9 +80,7 @@ export class Step1Component implements OnInit, OnDestroy {
     });
 
     if (this.personalForm.valid) {
-      this.store.dispatch(FormActions.updatePersonalInfo({
-        personalInfo: this.personalForm.value
-      }));
+      this.formService.updatePersonalInfo(this.personalForm.value);
       await this.router.navigate(['/multi-step/step2']);
     }
   }
