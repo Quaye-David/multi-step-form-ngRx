@@ -1,14 +1,15 @@
-
+// step2.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { NavigationButtonsComponent } from "../navigation-buttons/navigation-buttons.component";
-import { FormDataService } from '../../services/form-data.service';
+import { NavigationButtonsComponent } from '../navigation-buttons/navigation-buttons.component';
+import { FormService } from '../../services/form-data.service';
 
 type PlanType = '' | 'arcade' | 'advanced' | 'pro';
+
 interface Plan {
-  id: PlanType;  // Update from string to PlanType
+  id: PlanType;
   title: string;
   monthlyPrice: number;
   yearlyPrice: number;
@@ -18,15 +19,13 @@ interface Plan {
 @Component({
   selector: 'app-step2',
   standalone: true,
-  imports: [CommonModule, NavigationButtonsComponent],
+  imports: [CommonModule, RouterLink, NavigationButtonsComponent],
   templateUrl: './step2.component.html',
-  styleUrl: './step2.component.css'
+  styleUrls: ['./step2.component.css']
 })
 export class Step2Component implements OnInit, OnDestroy {
-  selectedPlan: Plan['id'] = 'arcade'; // Default fallback
+  selectedPlan: Plan['id'] = 'arcade';
   isYearly = false;
-  private readonly router: Router;
-  private readonly formDataService: FormDataService;
   private readonly subscription = new Subscription();
 
   plans: Plan[] = [
@@ -51,30 +50,26 @@ export class Step2Component implements OnInit, OnDestroy {
       yearlyPrice: 150,
       icon: 'assets/images/icon-pro.svg'
     }
-  ] as const;
+  ];
 
   constructor(
-    router: Router,
-    formDataService: FormDataService
-  ) {
-    this.router = router;
-    this.formDataService = formDataService;
-  }
+    private readonly formService: FormService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
-    // Load saved data
+    this.loadSavedPlan();
+  }
+
+  private loadSavedPlan(): void {
     this.subscription.add(
-      this.formDataService.formData$.subscribe(data => {
-        if (data.plan.type) {
-          this.selectedPlan = data.plan.type as Plan['id'];
-          this.isYearly = data.plan.isYearly;
+      this.formService.getPlan().subscribe(plan => {
+        if (plan.type) {
+          this.selectedPlan = plan.type as Plan['id'];
+          this.isYearly = plan.isYearly;
         }
       })
     );
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   private updatePlanData(): void {
@@ -84,15 +79,11 @@ export class Step2Component implements OnInit, OnDestroy {
       return;
     }
 
-    try {
-      this.formDataService.updatePlan({
-        type: this.selectedPlan,
-        isYearly: this.isYearly,
-        price: this.isYearly ? selectedPlanDetails.yearlyPrice : selectedPlanDetails.monthlyPrice
-      });
-    } catch (error) {
-      console.error('Failed to update plan:', error);
-    }
+    this.formService.updatePlan({
+      type: this.selectedPlan,
+      isYearly: this.isYearly,
+      price: this.isYearly ? selectedPlanDetails.yearlyPrice : selectedPlanDetails.monthlyPrice
+    });
   }
 
   toggleBilling(): void {
@@ -114,5 +105,9 @@ export class Step2Component implements OnInit, OnDestroy {
       this.updatePlanData();
       this.router.navigate(['/multi-step/step3']);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

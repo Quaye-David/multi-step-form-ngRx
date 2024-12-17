@@ -1,10 +1,10 @@
 // step1.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { FormDataService } from '../../services/form-data.service';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 import { NavigationButtonsComponent } from '../navigation-buttons/navigation-buttons.component';
 import { Router } from '@angular/router';
+import { FormService } from '../../services/form-data.service';
 
 @Component({
   selector: 'app-step1',
@@ -21,7 +21,7 @@ export class Step1Component implements OnInit, OnDestroy {
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly formDataService: FormDataService,
+    private readonly formService: FormService,
     private readonly router: Router
   ) {}
 
@@ -49,7 +49,7 @@ export class Step1Component implements OnInit, OnDestroy {
   private loadSavedData(): void {
     this.isLoadingData = true;
     this.subscription.add(
-      this.formDataService.formData$.subscribe(data => {
+      this.formService.getFormData().subscribe(data => {
         if (data?.personalInfo) {
           this.personalForm.patchValue(data.personalInfo, { emitEvent: false });
         }
@@ -65,7 +65,7 @@ export class Step1Component implements OnInit, OnDestroy {
         distinctUntilChanged()
       ).subscribe(() => {
         if (!this.isLoadingData && this.personalForm.valid) {
-          this.formDataService.updatePersonalInfo(this.personalForm.value);
+          this.formService.updatePersonalInfo(this.personalForm.value);
         }
       })
     );
@@ -74,13 +74,13 @@ export class Step1Component implements OnInit, OnDestroy {
   async goNext(): Promise<void> {
     this.formSubmitted = true;
 
-    // Mark all fields as touched
     Object.keys(this.personalForm.controls).forEach(key => {
       const control = this.personalForm.get(key);
       control?.markAsTouched();
     });
 
     if (this.personalForm.valid) {
+      this.formService.updatePersonalInfo(this.personalForm.value);
       await this.router.navigate(['/multi-step/step2']);
     }
   }

@@ -1,10 +1,12 @@
-// step4.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NavigationButtonsComponent } from '../navigation-buttons/navigation-buttons.component';
-import { FormDataService } from '../../services/form-data.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { selectPlan, selectAddons } from '../../store/form/form.selectors';
+import { FormActions } from '../../store/form/form.actions';
 
 interface SelectedPlan {
   name: string;
@@ -26,9 +28,6 @@ interface SelectedAddon {
 })
 export class Step4Component implements OnInit, OnDestroy {
   private readonly subscription = new Subscription();
-  private readonly router: Router;
-  private readonly formDataService: FormDataService;
-
   selectedPlan: SelectedPlan = {
     name: 'Arcade',
     price: 9,
@@ -38,25 +37,29 @@ export class Step4Component implements OnInit, OnDestroy {
   selectedAddons: SelectedAddon[] = [];
 
   constructor(
-    router: Router,
-    formDataService: FormDataService
-  ) {
-    this.router = router;
-    this.formDataService = formDataService;
-  }
+    private readonly store: Store<AppState>,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     this.subscription.add(
-      this.formDataService.formData$.subscribe(data => {
-        // Load plan data
-        this.selectedPlan = {
-          name: data.plan.type.charAt(0).toUpperCase() + data.plan.type.slice(1),
-          price: data.plan.price,
-          isYearly: data.plan.isYearly
-        };
+      this.store.select(selectPlan).subscribe(plan => {
+        if (plan.type) {
+          this.selectedPlan = {
+            name: plan.type.charAt(0).toUpperCase() + plan.type.slice(1),
+            price: plan.price,
+            isYearly: plan.isYearly
+          };
+        }
+      })
+    );
 
-        // Load addons
-        this.selectedAddons = data.addons;
+    this.subscription.add(
+      this.store.select(selectAddons).subscribe(addons => {
+        this.selectedAddons = addons.map(addon => ({
+          name: addon.name,
+          price: addon.price
+        }));
       })
     );
   }
@@ -83,7 +86,7 @@ export class Step4Component implements OnInit, OnDestroy {
   }
 
   confirmSubscription(): void {
-    this.formDataService.clearStorage();
+    this.store.dispatch(FormActions.resetForm());
     this.router.navigate(['/multi-step/step5']);
   }
 }
