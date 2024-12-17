@@ -1,9 +1,9 @@
 // multi-step.component.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 import { StepSidebarComponent } from '../components/step-sidebar/step-sidebar.component';
-import { FormDataService } from '../services/form-data.service';
+import { FormService } from '../services/form-data.service';
 
 @Component({
   selector: 'app-multi-step',
@@ -27,7 +27,7 @@ export class MultiStepComponent implements OnDestroy {
 
   constructor(
     private readonly router: Router,
-    private readonly FormDataService: FormDataService
+    private readonly FormService: FormService
   ) {
     this.subscription.add(
       this.router.events
@@ -44,7 +44,7 @@ export class MultiStepComponent implements OnDestroy {
   }
 
   async handleClose(): Promise<void> {
-    this.FormDataService.clearStorage();
+    this.FormService.clearStorage();
     await this.router.navigate(['/']);
   }
 

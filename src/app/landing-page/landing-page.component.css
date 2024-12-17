@@ -1,15 +1,3 @@
-/* landing-page.component.css */
-:host {
-  --primary: #6c63ff;
-  --secondary: #ff6b6b;
-  --accent: #00ff9d;
-  --dark: #0a0a0a;
-  --darker: #050505;
-  --light: #ffffff;
-  --gradient-1: linear-gradient(45deg, var(--primary), var(--secondary));
-  --gradient-2: linear-gradient(135deg, var(--accent), var(--primary));
-}
-
 .landing {
   min-height: 100vh;
   background: var(--darker);
@@ -103,6 +91,7 @@
   display: block;
   background: var(--gradient-1);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: slideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -146,97 +135,6 @@
   transform: translateX(5px);
 }
 
-/* Features Section */
-.features {
-  padding: 6rem 2rem;
-  background: var(--dark);
-  position: relative;
-}
-
-.features__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.feature {
-  background: rgba(255,255,255,0.05);
-  border-radius: 20px;
-  padding: 2rem;
-  text-align: center;
-  transition: transform 0.3s ease;
-  animation: fadeIn 0.8s ease-out both;
-}
-
-.feature:hover {
-  transform: translateY(-10px);
-  background: rgba(255,255,255,0.08);
-}
-
-.feature__icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.feature__title {
-  font-size: 1.5rem;
-  color: var(--accent);
-  margin-bottom: 1rem;
-}
-
-.feature__text {
-  color: rgba(255,255,255,0.7);
-  line-height: 1.6;
-}
-
-/* CTA Section */
-.cta {
-  padding: 6rem 2rem;
-  background: var(--darker);
-  position: relative;
-  overflow: hidden;
-}
-
-.cta__content {
-  max-width: 600px;
-  margin: 0 auto;
-  text-align: center;
-  position: relative;
-  z-index: 1;
-}
-
-.cta__title {
-  font-size: clamp(2rem, 5vw, 3rem);
-  margin-bottom: 1rem;
-  background: var(--gradient-1);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.cta__text {
-  font-size: 1.1rem;
-  color: rgba(255,255,255,0.8);
-  margin-bottom: 2rem;
-}
-
-.cta__button {
-  display: inline-block;
-  padding: 1rem 2.5rem;
-  background: var(--gradient-1);
-  color: var(--light);
-  text-decoration: none;
-  border-radius: 50px;
-  font-weight: bold;
-  transition: all 0.3s ease;
-}
-
-.cta__button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 30px rgba(108,99,255,0.3);
-}
-
 /* Animations */
 @keyframes pulse {
   0% { transform: scale(1); opacity: 0.5; }
@@ -274,10 +172,6 @@
 @media (max-width: 768px) {
   .hero {
     padding: 1rem;
-  }
-
-  .features {
-    padding: 4rem 1rem;
   }
 
   .cta {

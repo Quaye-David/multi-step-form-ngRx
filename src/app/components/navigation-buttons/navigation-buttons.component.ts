@@ -15,7 +15,7 @@ interface ButtonConfig {
   standalone: true,
   styleUrls: ['../../multi-step/multi-step.component.css'],
   template: `
-    <div class="multi-step__buttons">
+    <div class="multi-step__buttons" [class.multi-step__buttons--single]="getVisibleButtons().length === 1">
       @for (button of getVisibleButtons(); track button.type) {
         <button
           [class]="'multi-step__button ' + button.cssClass"
@@ -28,6 +28,8 @@ interface ButtonConfig {
     </div>
   `
 })
+
+
 export class NavigationButtonsComponent {
   @Input() showBackButton = false;
   @Input() showNextButton = false;

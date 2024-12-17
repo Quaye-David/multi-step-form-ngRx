@@ -35,6 +35,15 @@
 --very-light-grey: #f8f9ff;
 --white: #ffffff;
 
+--primary: #6c63ff;
+--secondary: #ff6b6b;
+--accent: #00ff9d;
+--dark: #0a0a0a;
+--darker: #050505;
+--light: #ffffff;
+--gradient-1: linear-gradient(45deg, var(--primary), var(--secondary));
+--gradient-2: linear-gradient(135deg, var(--accent), var(--primary));
+
 /* Typography */
 --fs-heading: 2rem;
 --fs-body-l: 1rem;

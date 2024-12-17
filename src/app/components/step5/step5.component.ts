@@ -16,11 +16,11 @@ export class Step5Component implements OnDestroy {
 
   constructor(private readonly router: Router) {}
 
-  // ngOnInit(): void {
-  //   this.timeoutId = window.setTimeout(() => {
-  //     this.router.navigate(['/']);
-  //   }, 3000);
-  // }
+  ngOnInit(): void {
+    this.timeoutId = window.setTimeout(() => {
+      this.router.navigate(['/']);
+    }, 3000);
+  }
 
   ngOnDestroy(): void {
     if (this.timeoutId) {

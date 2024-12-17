@@ -1,7 +1,18 @@
 .plan-selection {
-  max-width: 450px;
-  max-height: 348px;
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 2rem;
 }
+
+.plan-selection__container {
+  max-width: 450px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 
 .plan-selection__title {
   color: var(--denim);
@@ -138,6 +149,7 @@
   .plan-selection {
     width: 100%;
     margin: 0;
+    gap: 1rem;
   }
 
   .plan-selection__title {
