@@ -1,4 +1,3 @@
-// app.routes.ts
 import { Routes } from '@angular/router';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { MultiStepComponent } from './multi-step/multi-step.component';
@@ -17,26 +16,10 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'step1', pathMatch: 'full' },
       { path: 'step1', component: Step1Component },
-      {
-        path: 'step2',
-        component: Step2Component,
-        canActivate: [MobileNavigationGuard]
-      },
-      {
-        path: 'step3',
-        component: Step3Component,
-        canActivate: [MobileNavigationGuard]
-      },
-      {
-        path: 'step4',
-        component: Step4Component,
-        canActivate: [MobileNavigationGuard]
-      },
-      {
-        path: 'step5',
-        component: Step5Component,
-        canActivate: [MobileNavigationGuard]
-      }
+      { path: 'step2', component: Step2Component, canActivate: [MobileNavigationGuard] },
+      { path: 'step3', component: Step3Component, canActivate: [MobileNavigationGuard] },
+      { path: 'step4', component: Step4Component, canActivate: [MobileNavigationGuard] },
+      { path: 'step5', component: Step5Component }
     ]
   },
   { path: '**', redirectTo: '' }
