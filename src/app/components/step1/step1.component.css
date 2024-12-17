@@ -88,13 +88,6 @@
 }
 
 @media screen and (max-width: 375px) {
-  .personal-info {
-    gap: 1.5rem;
-  }
-
-  .personal-info__container {
-    gap: 1rem;
-  }
 
   .personal-info__title {
     font-size: 24px;

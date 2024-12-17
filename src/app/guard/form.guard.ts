@@ -18,19 +18,19 @@ export class FormGuard implements CanActivate, OnDestroy {
   async canActivate(): Promise<boolean> {
     try {
       const formData = await firstValueFrom(
-        this.formService.getFormData().pipe(
-          map(formData => {
-            if (formData?.personalInfo?.name) {
-              this.timeoutId = window.setTimeout(() => {
-                this.router.navigate(['/multi-step/step1']);
-              }, 2000);
-              return true; // Allow landing page to show initially
-            }
-            return false; // Redirect to another page if condition is not met
-          })
-        )
+        this.formService.getFormData()
       );
-      return formData;
+
+      if (formData?.personalInfo?.name) {
+        // Allow landing page to show initially
+        this.timeoutId = window.setTimeout(() => {
+          this.router.navigate(['/multi-step/step1']);
+        }, 2000);
+        return true;
+      }
+
+      // No form data, allow landing page access
+      return true;
     } catch (error) {
       console.error('Form guard error:', error);
       return true;

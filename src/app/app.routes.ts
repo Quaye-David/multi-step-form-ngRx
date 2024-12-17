@@ -10,7 +10,10 @@ import { MobileNavigationGuard } from './guard/mobile-navigation-guard.service';
 import { FormGuard } from './guard/form.guard';
 
 export const routes: Routes = [
-  { path: '', component: LandingPageComponent,
+  {
+    path: '',
+    component: LandingPageComponent,
+    pathMatch: 'full',
     canActivate: [FormGuard]
    },
   {

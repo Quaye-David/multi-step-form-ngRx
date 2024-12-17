@@ -1,5 +1,5 @@
 // multi-step.component.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 import { StepSidebarComponent } from '../components/step-sidebar/step-sidebar.component';

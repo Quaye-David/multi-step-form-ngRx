@@ -15,9 +15,7 @@
             @if (personalForm.get(field.name)?.invalid &&
                 (personalForm.get(field.name)?.touched || formSubmitted)) {
               <span class="form-field__error">
-                @for (error of getFieldErrors(field.name); track error) {
-                  {{error}}
-                }
+                {{getFieldErrors(field.name)[0]}}
               </span>
             }
           </div>
