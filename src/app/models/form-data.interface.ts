@@ -18,3 +18,13 @@ export interface FormData {
   }[];
 }
 export type PlanType = '' | 'arcade' | 'advanced' | 'pro' | 'basic' | 'Premium';
+
+export interface FormFieldConfig {
+  name: string;
+  label: string;
+  type: string;
+  placeholder: string;
+  validationMessages: {
+    [key: string]: string;
+  };
+}

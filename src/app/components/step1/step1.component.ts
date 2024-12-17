@@ -5,6 +5,7 @@ import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 import { NavigationButtonsComponent } from '../navigation-buttons/navigation-buttons.component';
 import { Router } from '@angular/router';
 import { FormService } from '../../services/form-data.service';
+import { FormFieldConfig } from '../../models/form-data.interface';
 
 @Component({
   selector: 'app-step1',
@@ -44,6 +45,51 @@ export class Step1Component implements OnInit, OnDestroy {
         Validators.pattern(/^\+?[\d\s-]+$/)
       ]]
     });
+  }
+
+  formFields: FormFieldConfig[] = [
+    {
+      name: 'name',
+      label: 'Name',
+      type: 'text',
+      placeholder: 'e.g. Stephen King',
+      validationMessages: {
+        required: 'Name is required',
+        minlength: 'Name must be at least 2 characters'
+      }
+    },
+    {
+      name: 'email',
+      label: 'Email Address',
+      type: 'email',
+      placeholder: 'e.g. stephenking@lorem.com',
+      validationMessages: {
+        required: 'Email is required',
+        email: 'Email must be a valid email address'
+      }
+    },
+    {
+      name: 'phone',
+      label: 'Phone Number',
+      type: 'tel',
+      placeholder: 'e.g. +1 234 567 890',
+      validationMessages: {
+        required: 'Phone number is required',
+        pattern: 'Phone number must be a valid phone number'
+      }
+    }
+  ];
+
+  getFieldErrors(fieldName: string): string[] {
+    const control = this.personalForm.get(fieldName);
+    if (!control?.errors || (!control.touched && !this.formSubmitted)) {
+      return [];
+    }
+
+    const field = this.formFields.find(f => f.name === fieldName);
+    return Object.keys(control.errors)
+      .map(key => field?.validationMessages[key])
+      .filter((message): message is string => !!message);
   }
 
   private loadSavedData(): void {
