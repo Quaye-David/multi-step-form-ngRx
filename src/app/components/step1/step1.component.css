@@ -6,8 +6,7 @@
 }
 
 .personal-info__container {
-  max-width: 554px;
-  margin: 0 auto;
+  max-width: 450px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -19,14 +18,12 @@
   font-size: var(--fs-heading);
   font-weight: 700;
   line-height: 2rem;
-  margin-bottom: 16px;
 }
 
 .personal-info__description {
   color: var(--grey);
   font-size: var(--fs-body-l);
   line-height: 1.5rem;
-  margin-bottom: 32px;
 }
 
 .personal-info__form {

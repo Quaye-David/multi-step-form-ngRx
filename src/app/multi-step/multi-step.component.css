@@ -1,4 +1,3 @@
-/* Main Container */
 .multi-step {
   width: 940px;
   height: 600px;
@@ -24,7 +23,7 @@
   height: 32px;
   border-radius: 50%;
   border: none;
-  background: var(--grey);
+  background: var(--light-grey);
   color: var(--white);
   font-size: 16px;
   cursor: pointer;
@@ -124,6 +123,7 @@
 
 .multi-step__form-container {
   height: 100%;
+  padding-top: 48px;
 }
 
 .multi-step__buttons {
@@ -132,6 +132,10 @@
   justify-content: space-between;
   background: var(--white);
   max-width: 450px;
+}
+
+.multi-step__buttons--single {
+  justify-content: flex-end;
 }
 
 .multi-step__button {
@@ -234,8 +238,6 @@
 
   .multi-step__buttons {
     padding: 16px;
-    display: flex;
-    justify-content: space-between;
     margin-top: auto;
     border-top: 1px solid var(--light-grey);
   }
