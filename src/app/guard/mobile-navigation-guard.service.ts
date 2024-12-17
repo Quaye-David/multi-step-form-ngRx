@@ -1,26 +1,36 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { FormService } from '../services/form-data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MobileNavigationGuard implements CanActivate {
-  constructor(
-    private readonly router: Router,
-    private readonly formService: FormService
-  ) {}
+  private readonly MOBILE_BREAKPOINT = 376;
+
+  constructor(private readonly router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const isMobile = window.innerWidth < 768;
+    // Only apply guard for sidebar navigation
+    if (!state.url.includes('multi-step')) {
+      return true;
+    }
+
+    const isMobile = window.innerWidth <= this.MOBILE_BREAKPOINT;
     const targetStep = parseInt(route.url[0].path.replace('step', ''), 10);
     const currentStep = this.getCurrentStep();
 
-    if (isMobile && targetStep !== currentStep && targetStep !== currentStep + 1) {
+    // Allow normal navigation through form buttons
+    if (targetStep === currentStep + 1) {
+      return true;
+    }
+
+    // Block sidebar navigation on mobile
+    if (isMobile) {
       return false;
     }
 
-    return true;
+    // On desktop, only allow backward navigation through sidebar
+    return targetStep < currentStep;
   }
 
   private getCurrentStep(): number {

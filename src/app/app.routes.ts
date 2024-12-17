@@ -15,11 +15,8 @@ export const routes: Routes = [
     path: 'multi-step',
     component: MultiStepComponent,
     children: [
-      {
-        path: 'step1',
-        component: Step1Component,
-        canActivate: [MobileNavigationGuard]
-      },
+      { path: '', redirectTo: 'step1', pathMatch: 'full' },
+      { path: 'step1', component: Step1Component },
       {
         path: 'step2',
         component: Step2Component,

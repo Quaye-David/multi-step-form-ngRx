@@ -44,21 +44,35 @@ interface Step {
 })
 export class StepSidebarComponent {
   @Input() steps: Step[] = [];
-  @Input() currentStep = 1;
-  @Input() isMobile = false;
+  @Input('current-step') currentStep = 1;
+  @Input('is-mobile') isMobile = false;
+
+  private readonly MOBILE_BREAKPOINT = 376;
 
   isStepActive(stepNumber: number): boolean {
     return this.currentStep === stepNumber;
   }
 
   isStepDisabled(stepNumber: number): boolean {
-    return this.isMobile && stepNumber !== this.currentStep;
+    const isMobile = window.innerWidth <= this.MOBILE_BREAKPOINT;
+
+    // Disable all steps on mobile
+    if (isMobile) {
+      return true;
+    }
+
+    // On desktop, disable only future steps
+    return stepNumber > this.currentStep;
   }
 
   getStepLink(step: Step): string[] | null {
-    if (this.isStepDisabled(step.number)) {
+    const isMobile = window.innerWidth <= this.MOBILE_BREAKPOINT;
+
+    // No navigation links on mobile
+    if (isMobile || this.isStepDisabled(step.number)) {
       return null;
     }
-    return ['step' + step.number];
+
+    return ['/multi-step', 'step' + step.number];
   }
 }

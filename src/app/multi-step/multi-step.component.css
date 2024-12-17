@@ -72,10 +72,17 @@
   gap: 16px;
 }
 
+.multi-step__step-number--active,
 .multi-step__nav-link--active .multi-step__step-number {
   background-color: var(--light-blue);
   color: var(--marine-blue);
   border-color: transparent;
+}
+
+.multi-step__nav-link:not(.multi-step__nav-link--disabled):hover .multi-step__step-number {
+  border-color: var(--light-blue);
+  color: var(--marine-blue);
+  background-color: var(--light-blue);
 }
 
 .multi-step__step-number {
@@ -87,6 +94,7 @@
   place-items: center;
   color: var(--white);
   font-weight: 700;
+  transition: all 0.3s ease;
 }
 
 .multi-step__step-info {
@@ -105,12 +113,6 @@
   font-weight: 500;
   font-size: var(--fs-body-m);
   text-transform: uppercase;
-}
-
-.multi-step__nav-link--disabled {
-  pointer-events: none;
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 /* Content Area */
